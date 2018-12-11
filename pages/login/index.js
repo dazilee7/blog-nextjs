@@ -2,27 +2,24 @@ import { InputItem, Toast } from 'antd-mobile';
 import React, { Component } from 'react';
 // import { qc, createFetch, goBack, history, request, to } from 'utils';
 import s from './Login.less';
-const logoZj = '/static/img/logo.png';
-const logoBhh = '/static/img/bhh.png';
+const logoZj = '../../static/img/logo.png';
+const logoBhh = '../../static/img/bhh.png';
 
-let logoImg;
-const _window = global || window;
-console.log(_window.location)
 class Index extends Component {
     static propTypes = {};
     constructor (props) {
         super(props);
-        if (_window.location) {
-            const IS_XXZS = _window.location.hostname.indexOf('cui51') > -1;
-            logoImg = IS_XXZS ? logoBhh : logoZj;
-        }
 
         this.state = {
             seconds: '获取验证码',
             quickLogin: false
         };
+
+        console.info(1)
     }
-    componentDidMount() {}
+    componentDidMount() {
+        console.info(2)
+    }
     componentWillUnmount() {
         clearInterval(this.timer);
     }
@@ -102,7 +99,7 @@ class Index extends Component {
         return (
             <div className={s.login}>
                 <div className={s.logo}>
-                    <img src={logoImg} alt="" />
+                    <img src={logoZj} alt="" />
                 </div>
                 <div className={s.form}>
                     <div className={s.input_item}>
