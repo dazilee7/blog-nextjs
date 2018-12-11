@@ -18,6 +18,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editors and IDEs
+.next
 .idea
 .vscode/*
 !.vscode/settings.json
