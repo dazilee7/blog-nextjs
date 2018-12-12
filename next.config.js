@@ -1,13 +1,25 @@
 // next.config.js
-const withLess = require('@zeit/next-less')
-const withCss = require('@zeit/next-css')
+const theme = require('./package.json').theme;
+const withLess = require('@zeit/next-less');
+const withCss = require('@zeit/next-css');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const lessToJS = require('less-vars-to-js');
+const fs = require('fs');
+const path = require('path');
+
+// Where your antd-custom.less file lives
+const themeVariables = lessToJS(
+    fs.readFileSync(
+        path.resolve(__dirname, './styles/antd-custom.less'),
+        'utf8'
+    )
+)
 
 // fix: prevents error when .css files are required by node
 if (typeof require !== 'undefined') {
     // eslint-disable-next-line
-    require.extensions['.css'] = (file) => {}
-    require.extensions['.less'] = (file) => {}
+    require.extensions['.css'] = (file) => {};
+    require.extensions['.less'] = (file) => {};
 }
 
 /**
@@ -17,45 +29,120 @@ if (typeof require !== 'undefined') {
  */
 
 module.exports = withCss({
-    // lessLoaderOptions: {
-    //     javascriptEnabled: true,
-    //     // modifyVars: themeVariables // make your antd custom effective
-    // },
-    webpack(config, options) {
-        console.log('=============start===============');
-        // console.log('options::', options, JSON.stringify(options));
-        const rules = config.module.rules;
+    // 不使用cssModules的配置, 页面切换样式正常
+    ...withLess({
+        // cssModules: true, // 与ant-mobile冲突
+        lessLoaderOptions: {
+            javascriptEnabled: true,
+            modifyVars: themeVariables // 自定义覆盖antd-mobile主题样式
+        },
+        postcssLoaderOptions: {
+            config: {
+                path: './postcss.config.js'
+            }
+        }
+    })
 
-        rules.push(...[
-            {
-                test: /\.less$/,
-                use: options.isServer ?
-                    ['ignore-loader']
-                    :
-                    [
-                        "extracted-loader",
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: true,
-                                minimize: false,
-                                sourceMap: true,
-                                importLoaders: 1
-                            }
-                        },
-                        {
-                            loader: 'less-loader',
-                            options: {
-                                javascriptEnabled: true,
-                            }
-                        }
-                    ]
-            },
-        ])
-
-        rules.forEach(e => console.log(e.test,'=>',JSON.stringify(e)))
-        console.log('============end================');
-        return config;
-    }
+    // 使用cssModules的配置，但是页面样式加载有延迟，应该是webpack配置不到位
+    // webpack(config, options) {
+    //     console.log('=============start===============');
+    //     // console.log('options::', options.defaultLoaders);
+    //     // console.log('options::', JSON.stringify(options.defaultLoaders));
+    //     const rules = config.module.rules;
+    //
+    //     rules.push(...[
+    //         // 非antd-mobile的less处理，主要是不使用cssModules
+    //         {
+    //             test: /\.less$/,
+    //             exclude: [/node_modules/],
+    //             use: options.isServer ?
+    //                 [
+    //                     {
+    //                         loader: 'css-loader/locals',
+    //                         options: {
+    //                             modules: true,
+    //                             minimize: false,
+    //                             sourceMap: true,
+    //                             importLoaders: 1
+    //                         }
+    //                     },
+    //                     {
+    //                         loader: 'less-loader',
+    //                         options: {
+    //                             javascriptEnabled: true,
+    //                             // modifyVars: themeVariables
+    //                         }
+    //                     }
+    //                 ]
+    //                 :
+    //                 [
+    //                     'style-loader',
+    //                     {
+    //                         loader: 'css-loader',
+    //                         options: {
+    //                             modules: true,
+    //                             minimize: false,
+    //                             sourceMap: true,
+    //                             importLoaders: 1
+    //                         }
+    //                     },
+    //                     {
+    //                         loader: 'less-loader',
+    //                         options: {
+    //                             javascriptEnabled: true,
+    //                             // modifyVars: themeVariables
+    //                         }
+    //                     }
+    //                 ]
+    //         },
+    //         // antd-mobile less处理，主要是不使用cssModules
+    //         {
+    //             test: /\.less$/,
+    //             exclude: [/pages/],
+    //             use: options.isServer ?
+    //                 [
+    //                     {
+    //                         loader: 'css-loader/locals',
+    //                         options: {
+    //                             modules: false,
+    //                             minimize: false,
+    //                             sourceMap: true,
+    //                             importLoaders: 1
+    //                         }
+    //                     },
+    //                     {
+    //                         loader: 'less-loader',
+    //                         options: {
+    //                             javascriptEnabled: true,
+    //                             modifyVars: themeVariables
+    //                         }
+    //                     }
+    //                 ]
+    //                 :
+    //                 [
+    //                     'style-loader',
+    //                     {
+    //                         loader: 'css-loader',
+    //                         options: {
+    //                             modules: false,
+    //                             minimize: false,
+    //                             sourceMap: true,
+    //                             importLoaders: 1
+    //                         }
+    //                     },
+    //                     {
+    //                         loader: 'less-loader',
+    //                         options: {
+    //                             javascriptEnabled: true,
+    //                             modifyVars: themeVariables
+    //                         }
+    //                     }
+    //                 ]
+    //         },
+    //     ]);
+    //
+    //     rules.forEach(e => console.log(e.test,'=>',JSON.stringify(e)));
+    //     console.log('============end================');
+    //     return config;
+    // }
 });

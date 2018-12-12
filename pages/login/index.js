@@ -1,7 +1,7 @@
 import { InputItem, Toast } from 'antd-mobile';
 import React, { Component } from 'react';
 // import { qc, createFetch, goBack, history, request, to } from 'utils';
-import s from './Login.less';
+import './Login.less';
 const logoZj = '../../static/img/logo.png';
 const logoBhh = '../../static/img/bhh.png';
 
@@ -97,12 +97,12 @@ class Index extends Component {
     render() {
         const { quickLogin, phone, password, code, counting, lock, seconds } = this.state;
         return (
-            <div className={s.login}>
-                <div className={s.logo}>
+            <div className={`login`}>
+                <div className={`logo`}>
                     <img src={logoZj} alt="" />
                 </div>
-                <div className={s.form}>
-                    <div className={s.input_item}>
+                <div className={`form`}>
+                    <div className={`input_item`}>
                         <InputItem
                             type="number"
                             value={phone}
@@ -112,7 +112,7 @@ class Index extends Component {
                         />
                     </div>
                     {!quickLogin ? (
-                        <div className={s.input_item}>
+                        <div className={`input_item`}>
                             <InputItem
                                 type="password"
                                 placeholder="请输入密码"
@@ -122,7 +122,7 @@ class Index extends Component {
                             />
                         </div>
                     ) : (
-                        <div className={s.input_item}>
+                        <div className={`input_item`}>
                             <div className={s.code}>
                                 <InputItem
                                     type="number"
@@ -133,7 +133,7 @@ class Index extends Component {
                                 />
                             </div>
                             <div
-                                className={`${s.code_btn} ${counting ? s.counting : ''}`}
+                                className={`code_btn ${counting ? 'counting' : ''}`}
                                 onClick={() => this.getCode()}
                             >
                                 {seconds}
@@ -141,10 +141,10 @@ class Index extends Component {
                         </div>
                     )}
                 </div>
-                <div className={`${s.button}`} onClick={() => this.login()}>
+                <div className={`button`} onClick={() => this.login()}>
                     登录
                 </div>
-                <div className={s.login_type}>
+                <div className={`login_type`}>
                     <span onClick={() => this.setState({ quickLogin: !quickLogin })}>
                         {!quickLogin ? '手机号快捷登录' : '账户密码登录'}
                     </span>
