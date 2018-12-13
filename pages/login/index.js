@@ -1,7 +1,8 @@
 import { InputItem, Toast } from 'antd-mobile';
 import React, { Component } from 'react';
 import Head from 'next/head';
-// import { qc, createFetch, goBack, history, request, to } from 'utils';
+import Router from 'next/router'
+import { createFetch, to } from '../../utils';
 import './Login.less';
 const logoZj = '../../static/img/logo.png';
 const logoBhh = '../../static/img/bhh.png';
@@ -35,7 +36,7 @@ class Index extends Component {
 
         Toast.loading('', 0);
         const [err, res] = await to(
-            request
+            createFetch
                 .post('/api/login/creditCheckCaptchaSendMessage', {
                     phone,
                 })
@@ -84,7 +85,7 @@ class Index extends Component {
 
         Toast.loading('', 0);
         const [err, res] = await to(
-            request.post('/api/login/creditLoginNew', { phone, message_code: code, password, type: +!quickLogin }).then(r => r.data),
+            createFetch.post('/api/login/creditLoginNew', { phone, message_code: code, password, type: +!quickLogin }).then(r => r.data),
         );
 
         Toast.hide();
@@ -93,7 +94,7 @@ class Index extends Component {
             return;
         }
 
-        Toast.info('登录成功', 3, () => history.replace('/user'));
+        Toast.info('登录成功', 3, () => Router.replace('/user'));
     }
     render() {
         const { quickLogin, phone, password, code, counting, lock, seconds } = this.state;
@@ -127,7 +128,7 @@ class Index extends Component {
                         </div>
                     ) : (
                         <div className={`input_item`}>
-                            <div className={s.code}>
+                            <div className={`code`}>
                                 <InputItem
                                     type="number"
                                     placeholder="请输入验证码"

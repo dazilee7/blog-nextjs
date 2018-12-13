@@ -31,7 +31,7 @@ if (typeof require !== 'undefined') {
 module.exports = withCss({
     // 不使用cssModules的配置, 页面切换样式正常
     ...withLess({
-        // cssModules: true, // 与ant-mobile冲突
+        cssModules: true, // 与ant-mobile冲突
         lessLoaderOptions: {
             javascriptEnabled: true,
             modifyVars: themeVariables // 自定义覆盖antd-mobile主题样式
@@ -40,6 +40,36 @@ module.exports = withCss({
             config: {
                 path: './postcss.config.js'
             }
+        },
+        webpack(config, options) {
+            const rules = config.module.rules;
+            let addLessRule;
+            rules.forEach(e => {
+                if (e.test.test('.less')) {
+                    const i = e.use.findIndex(r => r.loader && r.loader.indexOf('css-loader')>-1);
+                    if (i >= 0) {
+                        addLessRule = JSON.parse(JSON.stringify(e));
+                        addLessRule.use[i].options.modules = false;
+                        e.exclude = [/node_modules/];
+                        addLessRule.include = [/node_modules/];
+                        addLessRule.test = e.test;
+                    }
+                }
+                if (e.test.test('.css')) {
+                    const i = e.use.findIndex(r => r.loader && r.loader.indexOf('css-loader')>-1);
+                    if (i >= 0) {
+                        e.use[i].options.modules = false;
+                    }
+                }
+                console.log(e.test,'=>',JSON.stringify(e));
+            });
+
+            addLessRule && rules.unshift(addLessRule);
+
+            console.log('============end================');
+
+
+            return config;
         }
     })
 

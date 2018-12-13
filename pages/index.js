@@ -9,7 +9,7 @@ import '../styles/index.less';
 class Index extends Component {
     static propTypes = {};
     static async getInitialProps (ctx) {
-        console.log(ctx)
+        console.log(Object.keys(ctx))
         return {title: '首页？'}
     }
 
@@ -26,9 +26,7 @@ class Index extends Component {
     render() {
         return (
             <div>
-                <Link href="/test">
-                    <Button type="primary">Go to About Page</Button>
-                </Link>
+                <Button type="primary" onClick={() => Router.push('/user')}>Go to About Page</Button>
                 <p className="example">Hello Next.js</p>
             </div>
         )
