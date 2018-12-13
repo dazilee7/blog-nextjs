@@ -1,5 +1,6 @@
 import { InputItem, Toast } from 'antd-mobile';
 import React, { Component } from 'react';
+import Head from 'next/head';
 // import { qc, createFetch, goBack, history, request, to } from 'utils';
 import './Login.less';
 const logoZj = '../../static/img/logo.png';
@@ -98,6 +99,9 @@ class Index extends Component {
         const { quickLogin, phone, password, code, counting, lock, seconds } = this.state;
         return (
             <div className={`login`}>
+                <Head>
+                    <title>登录</title>
+                </Head>
                 <div className={`logo`}>
                     <img src={logoZj} alt="" />
                 </div>

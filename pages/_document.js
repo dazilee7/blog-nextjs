@@ -11,6 +11,7 @@ export default class MyDocument extends Document {
     }
 
     render() {
+        console.log('render Document...');
         return (
             <html lang='zh-cmn-Hans' data-scale='true'>
                 <Head>
