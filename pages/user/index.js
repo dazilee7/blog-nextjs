@@ -8,7 +8,7 @@ class User extends Component {
     static async getInitialProps (ctx) {
         const props = {title: '用户', data: {}};
         const [err, res] = await to(ssrFetch('/api/user/center').then(r => r.data));
-        console.log(err, res);
+        // console.log(err, res);
 
         if (err || +res.code !== 0) {
             // Toast.fail((err && err.message) || res.message || '网络异常', 2);
@@ -21,7 +21,6 @@ class User extends Component {
     }
     constructor(props) {
         super(props);
-        console.log('User props:', props);
 
         this.state = {
             list: props.data.list || [],

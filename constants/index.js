@@ -12,8 +12,7 @@ export const APP_INFO =
 export const IS_DEV = process.env.NODE_ENV !== 'pro';
 
 // 客户端还是服务端
-let window;
-export const IS_CLIENT = !!window;
+export const IS_CLIENT = typeof window !== 'undefined';
 
 // 注册页不显示年龄芝麻分的渠道
 export const QD_WHITE = ['dhh'];
